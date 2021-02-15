@@ -1,0 +1,8 @@
+Readwise Plugin for Calibre
+Copyright (c) 2021 William Bartholomew
+
+Calibre plugin to export your highlights to Readwise. 
+
+This plugin is NOT supported by Readwise - please report any issues at https://github.com/iamwillbar/calibre-plugin-readwise.
+
+Licensed under the MIT license. Readwise logo used with permission.

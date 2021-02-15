@@ -46,6 +46,10 @@ class ReadwiseDialog(QDialog):
     for annotation in db.all_annotations(None, None, 'highlight', True, None):
       books.setdefault(annotation['book_id'], []).append(annotation)
 
+    if len(books) == 0:
+      QMessageBox.information(self, "Readwise", "There are no highlights to export.")
+      return
+
     body = {
       'highlights': []
     }
@@ -61,7 +65,6 @@ class ReadwiseDialog(QDialog):
           'highlighted_at': annotation['annotation']['timestamp']
         }
         body['highlights'].append(highlight)
-        print(highlight)
 
     headers = {
       'Authorization': f"Token {prefs['access_token']}",
@@ -81,10 +84,10 @@ class ReadwiseDialog(QDialog):
       if e.code == 401:
         QMessageBox.critical(self, "Readwise", "Export failed due to incorrect access token. Please update the access token and try again.")
       else:
-        QMessageBox.critical(self, "Readwise", "Export failed with status code: " + e.code)
+        QMessageBox.critical(self, "Readwise", f"Export failed with status code: {e.code}")
 
     except urllib.error.URLError as e:
-        QMessageBox.critical(self, "Readwise", "Export failed with reason: " + e.reason)
+        QMessageBox.critical(self, "Readwise", f"Export failed with reason: {e.reason}")
 
     finally:
       if self.gui:

@@ -1,6 +1,7 @@
 from calibre_plugins.readwise.config import prefs
 from PyQt5.Qt import QDialog, QVBoxLayout, QLabel, QPushButton, QMessageBox
 import urllib.request
+from urllib.parse import quote
 import json
 
 class ReadwiseDialog(QDialog):
@@ -41,7 +42,8 @@ class ReadwiseDialog(QDialog):
 
   def sync(self):
     db = self.db.new_api
-
+    library_id = getattr(db, 'server_library_id', None)
+    library_id = '_hex_-' + library_id.encode('utf-8').hex()
     books = {}
     for annotation in db.all_annotations(None, None, 'highlight', True, None):
       books.setdefault(annotation['book_id'], []).append(annotation)
@@ -56,14 +58,22 @@ class ReadwiseDialog(QDialog):
     for book_id, annotations in books.items():
       metadata = db.get_metadata(book_id)
       for annotation in annotations:
+        link_prefix = f'calibre://view-book/{library_id}/{book_id}/{annotation["format"]}?open_at='
+        spine_index = (1 + annotation['annotation']['spine_index']) * 2
+        cfi = annotation['annotation']['start_cfi']
+        link = (link_prefix + quote(f'epubcfi(/{spine_index}{cfi})')).replace(')', '%29')
         highlight = {
           'text': annotation['annotation']['highlighted_text'],
           'title': metadata.title,
           'author': metadata.authors[0],
           'source_type': 'book',
           'note': annotation['annotation'].get('notes', None),
-          'highlighted_at': annotation['annotation']['timestamp']
+          'highlighted_at': annotation['annotation']['timestamp'],
+          'location_type': 'location',
+          'location': annotation['id'],
+          'highlight_url': link
         }
+
         body['highlights'].append(highlight)
 
     headers = {

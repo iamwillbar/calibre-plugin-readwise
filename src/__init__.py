@@ -5,7 +5,7 @@ class ReadwisePlugin(InterfaceActionBase):
   description = 'Export highlights to Readwise'
   supported_platforms = ['windows', 'osx', 'linux']
   author = 'William Bartholomew'
-  version = (0, 1, 1)
+  version = (0, 1, 2)
   minimum_calibre_version = (5, 0, 1)
   actual_plugin = 'calibre_plugins.readwise.ui:InterfacePlugin'
 

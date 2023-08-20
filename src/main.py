@@ -53,6 +53,7 @@ class ReadwiseDialog(QDialog):
     body = {
       'highlights': []
     }
+
     for book_id, annotations in books.items():
       metadata = db.get_metadata(book_id)
       for annotation in annotations:
@@ -62,15 +63,22 @@ class ReadwiseDialog(QDialog):
           'author': metadata.authors[0],
           'source_type': 'book',
           'note': annotation['annotation'].get('notes', None),
-          'highlighted_at': annotation['annotation']['timestamp']
+          'highlighted_at': annotation['annotation']['timestamp'],
         }
         body['highlights'].append(highlight)
 
     headers = {
       'Authorization': f"Token {prefs['access_token']}",
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'User-Agent': 'Calibre.app',
     }
-    request = urllib.request.Request('https://readwise.io/api/v2/highlights/', json.dumps(body).encode('utf-8'), headers = headers)
+
+    request = urllib.request.Request(
+      'https://readwise.io/api/v2/highlights/',
+      headers=headers,
+      method="POST",
+      data=json.dumps(body).encode('utf-8')
+    )
 
     try:
       if self.gui:

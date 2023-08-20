@@ -9,7 +9,7 @@
 
 ## Installation
 1. Install the Calibre plugin:
-   1. Download the [latest release](https://github.com/ashleyhindle/calibre-plugin-readwise/releases/latest).
+   1. Download the [latest release](releases/latest).
    1. Open Calibre.
    1. Click Preferences and then Plugins.
    1. Click Load Plugin From File and then select the release you downloaded above.

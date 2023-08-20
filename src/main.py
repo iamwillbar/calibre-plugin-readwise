@@ -68,9 +68,16 @@ class ReadwiseDialog(QDialog):
 
     headers = {
       'Authorization': f"Token {prefs['access_token']}",
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'User-Agent': 'Calibre.app',
     }
-    request = urllib.request.Request('https://readwise.io/api/v2/highlights/', json.dumps(body).encode('utf-8'), headers = headers)
+
+    request = urllib.request.Request(
+      'https://readwise.io/api/v2/highlights/',
+      headers=headers,
+      method="POST",
+      data=json.dumps(body).encode('utf-8')
+    )
 
     try:
       if self.gui:

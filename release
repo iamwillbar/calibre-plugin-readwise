@@ -1,4 +1,0 @@
-#!/bin/bash
-cd src
-zip -r ../calibre-plugin-readwise.zip . -x "*.git*" -x "release"
-cd ..
